@@ -1,297 +1,120 @@
 const suspects = [
-
-{
-  name: "Bianca Frost",
-  image: "assets/suspects/bianca_frost.JPG",
-  traits: [
-    "Black woman",
-    "Wavy hair",
-    "Wealthy",
-    "Athletic",
-    "Influencer",
-    "No glasses",
-    "Fashionable",
-    "Extrovert"
-  ]
-},
-
-{
-  name: "Cleo Saint",
-  image: "assets/suspects/cleo_saint.JPG",
-  traits: [
-    "Glasses",
-    "Dark hair",
-    "Fashionable",
-    "Controlled",
-    "Wealthy",
-    "Medium skin",
-    "Earrings",
-    "Manipulative"
-  ]
-},
-
-{
-  name: "Dorian Luxe",
-  image: "assets/suspects/dorian_luxe.JPG",
-  traits: [
-    "Black man",
-    "Glasses",
-    "Dark hair",
-    "Short beard",
-    "Fashionable",
-    "Scarf",
-    "Wealthy",
-    "Arrogant"
-  ]
-},
-
-{
-  name: "Gideon Pryce",
-  image: "assets/suspects/gideon_pryce.JPG",
-  traits: [
-    "Male",
-    "No glasses",
-    "Dark hair",
-    "Cold",
-    "Finance",
-    "Sharp suit",
-    "Wealthy",
-    "Aggressive"
-  ]
-},
-
-{
-  name: "Harvey Slate",
-  image: "assets/suspects/harvey_slate.JPG",
-  traits: [
-    "Older",
-    "Silver hair",
-    "Beard",
-    "No glasses",
-    "Aggressive",
-    "Wealthy",
-    "Suit",
-    "Property mogul"
-  ]
-},
-
-{
-  name: "India Gold",
-  image: "assets/suspects/India_gold.JPG",
-  traits: [
-    "Wavy hair",
-    "Dark hair",
-    "Influencer",
-    "Travel",
-    "Wealthy",
-    "Earrings",
-    "Extrovert",
-    "Fashionable"
-  ]
-},
-
-{
-  name: "Jaxon Vale",
-  image: "assets/suspects/jaxon_vale.JPG",
-  traits: [
-    "Beard",
-    "Dark hair",
-    "Tech",
-    "Athletic",
-    "Wealthy",
-    "Fashionable",
-    "No glasses",
-    "Confident"
-  ]
-},
-
-{
-  name: "Milo Vex",
-  image: "assets/suspects/milo-vale.JPG",
-  traits: [
-    "East Asian",
-    "Glasses",
-    "Messy hair",
-    "Tech",
-    "Introvert",
-    "Hoodie",
-    "Intelligent",
-    "Tired"
-  ]
-},
-
-{
-  name: "Nova Wilde",
-  image: "assets/suspects/nova_wilde.JPG",
-  traits: [
-    "Wavy hair",
-    "Glasses",
-    "Creative",
-    "Camera strap",
-    "Introvert",
-    "Earrings",
-    "Calm",
-    "Artistic"
-  ]
-},
-
-{
-  name: "Otis Blank",
-  image: "assets/suspects/otis_blank.JPG",
-  traits: [
-    "Bald",
-    "Glasses",
-    "Minimalist",
-    "Tech",
-    "Cold",
-    "Quiet",
-    "Wealthy",
-    "Black clothing"
-  ]
-},
-
-{
-  name: "Piper Bloom",
-  image: "assets/suspects/piper_bloom.JPG",
-  traits: [
-    "Blonde",
-    "Wavy hair",
-    "Lifestyle",
-    "Calm",
-    "Approachable",
-    "Hat",
-    "Earrings",
-    "Wellness"
-  ]
-},
-
-{
-  name: "Rex Branson",
-  image: "assets/suspects/rex_branson.JPG",
-  traits: [
-    "Beard",
-    "Athletic",
-    "Aggressive",
-    "Dark hair",
-    "Muscular",
-    "Alpha",
-    "No glasses",
-    "Bomber jacket"
-  ]
-},
-
-{
-  name: "Saffron Skye",
-  image: "assets/suspects/saffron_skye.JPG",
-  traits: [
-    "Blonde",
-    "Wavy hair",
-    "Glasses",
-    "Calm",
-    "Spiritual",
-    "Wealthy",
-    "Fashionable",
-    "Wellness"
-  ]
-},
-
-{
-  name: "Sebastian Drift",
-  image: "assets/suspects/sebastian_drift.JPG",
-  traits: [
-    "Techwear",
-    "Athletic",
-    "Glasses",
-    "Dark hair",
-    "Intense",
-    "Biohacker",
-    "Medium skin",
-    "Tech"
-  ]
-},
-
-{
-  name: "Tilly Chrome",
-  image: "assets/suspects/tilly_chrome.JPG",
-  traits: [
-    "Short hair",
-    "Blonde tips",
-    "Tattoos",
-    "Chef",
-    "Creative",
-    "Extrovert",
-    "Spiky hair",
-    "Fashionable"
-  ]
-},
-
-{
-  name: "Velvet Kane",
-  image: "assets/suspects/velvet_kane.JPG",
-  traits: [
-    "Curly hair",
-    "Glasses",
-    "Lawyer",
-    "Intimidating",
-    "Wealthy",
-    "Jewellery",
-    "Dark hair",
-    "Intelligent"
-  ]
-}
-
+  {
+    name: "Bianca Frost",
+    image: "assets/suspects/bianca_frost.JPG",
+    traits: ["Black woman", "Wavy hair", "Wealthy", "Athletic", "Influencer", "No glasses", "Fashionable", "Extrovert"]
+  },
+  {
+    name: "Cleo Saint",
+    image: "assets/suspects/cleo_saint.JPG",
+    traits: ["Glasses", "Dark hair", "Wavy hair", "Earrings", "Wealthy", "Fashionable", "Medium skin", "Controlled"]
+  },
+  {
+    name: "Dorian Luxe",
+    image: "assets/suspects/dorian_luxe.JPG",
+    traits: ["Black man", "Glasses", "Dark hair", "Short beard", "Scarf", "Fashionable", "Wealthy", "Arrogant"]
+  },
+  {
+    name: "Gideon Pryce",
+    image: "assets/suspects/gideon_pryce.JPG",
+    traits: ["Male", "No glasses", "Dark hair", "Sharp suit", "Cold", "Finance", "Wealthy", "Aggressive"]
+  },
+  {
+    name: "Harvey Slate",
+    image: "assets/suspects/harvey_slate.JPG",
+    traits: ["Older", "Silver hair", "Silver beard", "No glasses", "Suit", "Wealthy", "Aggressive", "Property mogul"]
+  },
+  {
+    name: "India Gold",
+    image: "assets/suspects/India_gold.JPG",
+    traits: ["Wavy hair", "Dark hair", "Earrings", "Travel", "Influencer", "Wealthy", "Fashionable", "Extrovert"]
+  },
+  {
+    name: "Jaxon Vale",
+    image: "assets/suspects/jaxon_vale.JPG",
+    traits: ["Male", "Beard", "Dark hair", "No glasses", "Athletic", "Tech", "Wealthy", "Confident"]
+  },
+  {
+    name: "Milo Vex",
+    image: "assets/suspects/milo-vale.JPG",
+    traits: ["East Asian", "Glasses", "Messy hair", "Hoodie", "Tech", "Introvert", "Tired", "Intelligent"]
+  },
+  {
+    name: "Nova Wilde",
+    image: "assets/suspects/nova_wilde.JPG",
+    traits: ["Wavy hair", "Glasses", "Earrings", "Camera strap", "Creative", "Introvert", "Calm", "Artistic"]
+  },
+  {
+    name: "Otis Blank",
+    image: "assets/suspects/otis_blank.JPG",
+    traits: ["Bald", "Glasses", "Black clothing", "Minimalist", "Tech", "Cold", "Quiet", "Wealthy"]
+  },
+  {
+    name: "Piper Bloom",
+    image: "assets/suspects/piper_bloom.JPG",
+    traits: ["Blonde", "Wavy hair", "Hat", "Earrings", "Lifestyle", "Wellness", "Calm", "Approachable"]
+  },
+  {
+    name: "Rex Branson",
+    image: "assets/suspects/rex_branson.JPG",
+    traits: ["Male", "Beard", "Dark hair", "No glasses", "Muscular", "Athletic", "Aggressive", "Alpha"]
+  },
+  {
+    name: "Saffron Skye",
+    image: "assets/suspects/saffron_skye.JPG",
+    traits: ["Blonde", "Wavy hair", "Glasses", "Spiritual", "Calm", "Wellness", "Wealthy", "Fashionable"]
+  },
+  {
+    name: "Sebastian Drift",
+    image: "assets/suspects/sebastian_drift.JPG",
+    traits: ["Medium skin", "Dark hair", "Glasses", "Techwear", "Athletic", "Biohacker", "Intense", "Tech"]
+  },
+  {
+    name: "Tilly Chrome",
+    image: "assets/suspects/tilly_chrome.JPG",
+    traits: ["Short hair", "Blonde tips", "Spiky hair", "Tattoos", "Chef", "Creative", "Extrovert", "Fashionable"]
+  },
+  {
+    name: "Velvet Kane",
+    image: "assets/suspects/velvet_kane.JPG",
+    traits: ["Curly hair", "Dark hair", "Glasses", "Jewellery", "Lawyer", "Wealthy", "Intimidating", "Intelligent"]
+  }
 ];
 
-const suspectCards =
-document.getElementById("suspectCards");
+function createCard(item) {
+  const card = document.createElement("div");
+  card.className = "card";
 
-function renderSuspects(){
+  const traits = item.traits
+    .map(trait => `<div class="trait">${trait}</div>`)
+    .join("");
 
-  suspectCards.innerHTML = "";
+  card.innerHTML = `
+    <img class="cardImage" src="${item.image}" alt="${item.name}">
+    <div class="cardContent">
+      <div class="cardTitle">${item.name}</div>
+      <div class="traits">${traits}</div>
+    </div>
+  `;
 
-  suspects.forEach((suspect) => {
-
-    const traitsHTML =
-    suspect.traits.map((trait) => {
-
-      return `
-        <div class="trait">
-          ${trait}
-        </div>
-      `;
-
-    }).join("");
-
-    const card =
-    document.createElement("div");
-
-    card.className = "card";
-
-    card.innerHTML = `
-
-      <img
-        class="cardImage"
-        src="${suspect.image}"
-      >
-
-      <div class="cardContent">
-
-        <div class="cardTitle">
-          ${suspect.name}
-        </div>
-
-        <div class="traits">
-          ${traitsHTML}
-        </div>
-
-      </div>
-
-    `;
-
-    suspectCards.appendChild(card);
-
-  });
-
+  return card;
 }
 
-renderSuspects();
+function renderCards(containerId, items) {
+  const container = document.getElementById(containerId);
+
+  if (!container) {
+    console.error("Missing container:", containerId);
+    return;
+  }
+
+  container.innerHTML = "";
+
+  items.forEach(item => {
+    container.appendChild(createCard(item));
+  });
+}
+
+renderCards("suspectCards", suspects);
+
+console.log("CLUEDLE JS loaded");
