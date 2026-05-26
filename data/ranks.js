@@ -1,68 +1,91 @@
 window.CLUEDLE_DATA = window.CLUEDLE_DATA || {};
 
-window.CLUEDLE_DATA.ranks = [
- {
-   id: "trainee_detective",
-   name: "Trainee Detective",
-   guessLimit: 8,
-   dossierStyle: "basic",
-   promotionTarget: 3,
-   demotionTrigger: 2
+window.CLUEDLE_DATA.rankRules = {
+ rollingWindow: 10,
+
+ scoreBySolveTurn: {
+   1: 100,
+   2: 90,
+   3: 80,
+   4: 65,
+   5: 50,
+   6: 35,
+   7: 20,
+   8: 10,
+   fail: 0
  },
- {
-   id: "detective",
-   name: "Detective",
-   guessLimit: 8,
-   dossierStyle: "standard",
-   promotionTarget: 5,
-   demotionTrigger: 2
- },
- {
-   id: "senior_detective",
-   name: "Senior Detective",
-   guessLimit: 7,
-   dossierStyle: "enhanced",
-   promotionTarget: 7,
-   demotionTrigger: 2
- },
- {
-   id: "lead_detective",
-   name: "Lead Detective",
-   guessLimit: 7,
-   dossierStyle: "casefile",
-   promotionTarget: 10,
-   demotionTrigger: 2
- },
- {
-   id: "detective_lieutenant",
-   name: "Detective Lieutenant",
-   guessLimit: 6,
-   dossierStyle: "classified",
-   promotionTarget: 12,
-   demotionTrigger: 2
- },
- {
-   id: "detective_captain",
-   name: "Detective Captain",
-   guessLimit: 6,
-   dossierStyle: "priority",
-   promotionTarget: 15,
-   demotionTrigger: 2
- },
- {
-   id: "chief_detective",
-   name: "Chief Detective",
-   guessLimit: 5,
-   dossierStyle: "restricted",
-   promotionTarget: 20,
-   demotionTrigger: 1
- },
- {
-   id: "master_detective",
-   name: "Master Detective",
-   guessLimit: 5,
-   dossierStyle: "black_archive",
-   promotionTarget: 25,
-   demotionTrigger: 1
+
+ ranks: [
+   {
+     id: "trainee_detective",
+     name: "Trainee Detective",
+     guessLimit: 8,
+     requiredStreak: 0,
+     requiredDetectionScore: 0,
+     dossierStyle: "basic"
+   },
+   {
+     id: "detective",
+     name: "Detective",
+     guessLimit: 8,
+     requiredStreak: 2,
+     requiredDetectionScore: 35,
+     dossierStyle: "standard"
+   },
+   {
+     id: "senior_detective",
+     name: "Senior Detective",
+     guessLimit: 7,
+     requiredStreak: 4,
+     requiredDetectionScore: 50,
+     dossierStyle: "enhanced"
+   },
+   {
+     id: "lead_detective",
+     name: "Lead Detective",
+     guessLimit: 7,
+     requiredStreak: 6,
+     requiredDetectionScore: 60,
+     dossierStyle: "casefile"
+   },
+   {
+     id: "detective_lieutenant",
+     name: "Detective Lieutenant",
+     guessLimit: 6,
+     requiredStreak: 8,
+     requiredDetectionScore: 68,
+     dossierStyle: "classified"
+   },
+   {
+     id: "detective_captain",
+     name: "Detective Captain",
+     guessLimit: 6,
+     requiredStreak: 12,
+     requiredDetectionScore: 74,
+     dossierStyle: "priority"
+   },
+   {
+     id: "chief_detective",
+     name: "Chief Detective",
+     guessLimit: 5,
+     requiredStreak: 16,
+     requiredDetectionScore: 80,
+     dossierStyle: "restricted"
+   },
+   {
+     id: "master_detective",
+     name: "Master Detective",
+     guessLimit: 5,
+     requiredStreak: 24,
+     requiredDetectionScore: 86,
+     dossierStyle: "black_archive"
+   }
+ ],
+
+ appraisalText: {
+   eligible: "Promotion Appraisal active.",
+   notEligible: "Maintain your streak and raise your Detection Score.",
+   maxRank: "Maximum clearance achieved.",
+   demotionRisk: "Performance review triggered. Solve cleanly to protect your rank."
  }
-];
+};
