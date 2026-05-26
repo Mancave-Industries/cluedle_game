@@ -1,61 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
  <title>CLUEDLE</title>
- <link rel="stylesheet" href="style.css">
+
+ <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
- <div class="app">
 
-   <header class="topbar">
-     <div>
-       <h1>CLUEDLE</h1>
-       <p>A satirical luxury murder mystery.</p>
-     </div>
+<div id="app">
 
-     <div class="headerRight">
-       <div id="turnCounter">5 TURNS LEFT</div>
-       <button id="newGameBtn">NEW GAME</button>
-     </div>
-   </header>
+ <header class="top-bar">
 
-   <main>
-     <section class="gameSection">
-       <h2>SUSPECTS</h2>
-       <div id="suspectCards" class="cardRow"></div>
-     </section>
+   <div class="rank-block">
+     <div class="rank-label">RANK</div>
+     <div id="rankName" class="rank-name">Trainee Detective</div>
+   </div>
 
-     <section class="gameSection">
-       <h2>ROOMS</h2>
-       <div id="roomCards" class="cardRow"></div>
-     </section>
+   <div class="score-block">
+     <div class="score-label">DETECTION SCORE</div>
+     <div id="detectionScore" class="score-value">0</div>
+   </div>
 
-     <section class="gameSection">
-       <h2>WEAPONS</h2>
-       <div id="weaponCards" class="cardRow"></div>
-     </section>
+   <div class="streak-block">
+     <div class="streak-label">STREAK</div>
+     <div id="streakValue" class="streak-value">0</div>
+   </div>
 
-     <section class="actionPanel">
-       <button id="accuseBtn" disabled>SELECT 3 CARDS</button>
-     </section>
+ </header>
 
-     <section class="notesPanel">
-       <h2>CASE NOTES</h2>
-       <div id="notes">Select one suspect, one room and one weapon.</div>
-     </section>
+ <section class="promotion-panel">
+   <div class="promotion-title">PROMOTION APPRAISAL</div>
+   <div id="promotionText" class="promotion-text">
+     Solve this case in 6 turns or fewer to improve your standing.
+   </div>
+ </section>
 
-     <section id="sharePanel" class="notesPanel hidden">
-       <h2>SHARE RESULT</h2>
-       <pre id="shareText"></pre>
-       <button id="copyBtn">COPY RESULT</button>
-     </section>
-   </main>
+ <!-- SUSPECT -->
+ <section class="carousel-section">
 
+   <div class="section-title">
+     SUSPECT
+   </div>
+
+   <div class="carousel-wrapper">
+     <div class="carousel-track" id="suspectCarousel"></div>
+   </div>
+
+ </section>
+
+ <!-- ROOM -->
+ <section class="carousel-section">
+
+   <div class="section-title">
+     ROOM
+   </div>
+
+   <div class="carousel-wrapper">
+     <div class="carousel-track" id="roomCarousel"></div>
+   </div>
+
+ </section>
+
+ <!-- WEAPON -->
+ <section class="carousel-section">
+
+   <div class="section-title">
+     WEAPON
+   </div>
+
+   <div class="carousel-wrapper">
+     <div class="carousel-track" id="weaponCarousel"></div>
+   </div>
+
+ </section>
+
+ <!-- MOTIVE -->
+ <section class="carousel-section">
+
+   <div class="section-title">
+     MOTIVE
+   </div>
+
+   <div class="carousel-wrapper">
+     <div class="carousel-track" id="motiveCarousel"></div>
+   </div>
+
+ </section>
+
+ <div class="submit-container">
+   <button id="submitTheoryBtn">
+     SUBMIT THEORY
+   </button>
  </div>
 
- <script src="script.js"></script>
+ <!-- FEEDBACK -->
+ <section id="feedbackPanel">
+
+   <div class="feedback-title">
+     CASE ANALYSIS REPORT
+   </div>
+
+   <div id="feedbackContent"></div>
+
+ </section>
+
+</div>
+
+<!-- DATA FILES -->
+<script src="data/suspects.js"></script>
+<script src="data/rooms.js"></script>
+<script src="data/weapons.js"></script>
+<script src="data/motives.js"></script>
+<script src="data/ranks.js"></script>
+
+<!-- MAIN ENGINE -->
+<script src="script.js"></script>
+
 </body>
 </html>
+
+
