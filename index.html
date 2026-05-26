@@ -1,99 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLUEDLE</title>
-
-  <link rel="stylesheet" href="style.css">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>CLUEDLE</title>
+ <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+ <div class="app">
 
-<div class="app">
+   <header class="topbar">
+     <div>
+       <h1>CLUEDLE</h1>
+       <p>A satirical luxury murder mystery.</p>
+     </div>
 
-  <header class="topbar">
+     <div class="headerRight">
+       <div id="turnCounter">5 TURNS LEFT</div>
+       <button id="newGameBtn">NEW GAME</button>
+     </div>
+   </header>
 
-    <div>
-      <h1>CLUEDLE</h1>
-      <p>
-        A satirical luxury murder mystery.
-      </p>
-    </div>
+   <main>
+     <section class="gameSection">
+       <h2>SUSPECTS</h2>
+       <div id="suspectCards" class="cardRow"></div>
+     </section>
 
-    <div class="headerRight">
+     <section class="gameSection">
+       <h2>ROOMS</h2>
+       <div id="roomCards" class="cardRow"></div>
+     </section>
 
-      <div id="turnCounter">
-        5 TURNS LEFT
-      </div>
+     <section class="gameSection">
+       <h2>WEAPONS</h2>
+       <div id="weaponCards" class="cardRow"></div>
+     </section>
 
-      <button id="newGameBtn">
-        NEW GAME
-      </button>
+     <section class="actionPanel">
+       <button id="accuseBtn" disabled>SELECT 3 CARDS</button>
+     </section>
 
-    </div>
+     <section class="notesPanel">
+       <h2>CASE NOTES</h2>
+       <div id="notes">Select one suspect, one room and one weapon.</div>
+     </section>
 
-  </header>
+     <section id="sharePanel" class="notesPanel hidden">
+       <h2>SHARE RESULT</h2>
+       <pre id="shareText"></pre>
+       <button id="copyBtn">COPY RESULT</button>
+     </section>
+   </main>
 
-  <main>
+ </div>
 
-    <section class="gameSection">
-
-      <h2>SUSPECTS</h2>
-
-      <div
-        id="suspectCards"
-        class="cardRow"
-      ></div>
-
-    </section>
-
-    <section class="gameSection">
-
-      <h2>ROOMS</h2>
-
-      <div
-        id="roomCards"
-        class="cardRow"
-      ></div>
-
-    </section>
-
-    <section class="gameSection">
-
-      <h2>WEAPONS</h2>
-
-      <div
-        id="weaponCards"
-        class="cardRow"
-      ></div>
-
-    </section>
-
-    <section class="actionPanel">
-
-      <button id="accuseBtn">
-        MAKE ACCUSATION
-      </button>
-
-    </section>
-
-    <section class="notesPanel">
-
-      <h2>CASE NOTES</h2>
-
-      <div id="notes">
-        Select one suspect, one room and one weapon.
-      </div>
-
-    </section>
-
-  </main>
-
-</div>
-
-<script src="script.js"></script>
-
+ <script src="script.js"></script>
 </body>
 </html>
