@@ -1,543 +1,766 @@
-const suspects = window.CLUEDLE_DATA.suspects;
-const rooms = window.CLUEDLE_DATA.rooms;
-const weapons = window.CLUEDLE_DATA.weapons;
-const motives = window.CLUEDLE_DATA.motives;
+const D = window.CLUEDLE_DATA || {};
 
-const suspectMatrix = window.CLUEDLE_DATA.suspectTraitMatrix;
-const roomMatrix = window.CLUEDLE_DATA.roomTraitMatrix;
-const weaponMatrix = window.CLUEDLE_DATA.weaponTraitMatrix;
-const motiveMatrix = window.CLUEDLE_DATA.motiveTraitMatrix;
+const ASSETS = {
+ overlays:{
+   wrong:"assets/overlays/wrong.jpg",
+   correct:"assets/overlays/correctframe.jpg",
+   verified:"assets/overlays/verifystamp.jpg",
+   suspect:"assets/overlays/suspect.jpg",
+   room:"assets/overlays/room.jpg",
+   weapon:"assets/overlays/weapon.jpg",
+   motive:"assets/overlays/motive.jpg"
+ },
 
-const rankRules = window.CLUEDLE_DATA.rankRules;
-
-const suspectCarousel = document.getElementById("suspectCarousel");
-const roomCarousel = document.getElementById("roomCarousel");
-const weaponCarousel = document.getElementById("weaponCarousel");
-const motiveCarousel = document.getElementById("motiveCarousel");
-
-const feedbackContent = document.getElementById("feedbackContent");
-
-const submitTheoryBtn = document.getElementById("submitTheoryBtn");
-
-const rankName = document.getElementById("rankName");
-const detectionScore = document.getElementById("detectionScore");
-const streakValue = document.getElementById("streakValue");
-const promotionText = document.getElementById("promotionText");
-
-let knownTraits = {
- suspect: [],
- room: [],
- weapon: [],
- motive: []
+ help:[
+   "assets/ui/howtoplay.jpg",
+   "assets/ui/swipe.jpg",
+   "assets/ui/deduce.jpg"
+ ]
 };
 
-let selected = {
- suspect: 0,
- room: 0,
- weapon: 0,
- motive: 0
-};
-
-let solution = {
- suspect: suspects[Math.floor(Math.random() * suspects.length)],
- room: rooms[Math.floor(Math.random() * rooms.length)],
- weapon: weapons[Math.floor(Math.random() * weapons.length)],
- motive: motives[Math.floor(Math.random() * motives.length)]
-};
-
-let playerState = JSON.parse(
- localStorage.getItem("cluedlePlayer")
-) || {
- rank: "trainee_detective",
- streak: 0,
- recentScores: []
-};
-
-renderPlayerState();
-
-buildCarousel(
- suspects,
- suspectCarousel,
- "suspect"
-);
-
-buildCarousel(
- rooms,
- roomCarousel,
- "room"
-);
-
-buildCarousel(
- weapons,
- weaponCarousel,
- "weapon"
-);
-
-buildCarousel(
- motives,
- motiveCarousel,
+const categories = [
+ "suspect",
+ "room",
+ "weapon",
  "motive"
-);
+];
 
-submitTheoryBtn.addEventListener(
- "click",
- submitTheory
-);
+let cases = [];
 
-function buildCarousel(
- data,
- container,
- category
-) {
+let game = {
+ case:null,
+ solution:{},
+ victim:null,
 
- container.innerHTML = "";
+ pools:{},
 
- data.forEach((item, index) => {
+ index:{
+   suspect:0,
+   room:0,
+   weapon:0,
+   motive:0
+ },
 
-   const card = document.createElement("div");
+ turns:6,
 
-   card.className = "card";
+ eliminated:{
+   suspect:[],
+   room:[],
+   weapon:[],
+   motive:[]
+ },
 
-   if (index === 0) {
-     card.classList.add("active");
-   }
+ confirmed:{
+   suspect:false,
+   room:false,
+   weapon:false,
+   motive:false
+ },
 
-   card.dataset.index = index;
+ disclosed:{
+   suspect:[],
+   room:[],
+   weapon:[],
+   motive:[]
+ },
 
-   card.innerHTML = `
-     <img
-       class="card-image"
-       src="${item.image}"
-     />
+ help:0
+};
 
-     <div class="card-content">
+const $ = id => document.getElementById(id);
 
-       <div class="card-title">
-         ${item.name}
-       </div>
+const show = id => {
+ document
+   .querySelectorAll(".screen")
+   .forEach(s => s.classList.remove("active"));
 
-       <div class="traits">
-         ${renderTraits(item, category)}
-       </div>
+ $(id).classList.add("active");
+};
 
-     </div>
-   `;
+function seedToday(){
+ return Number(
+   new Date()
+     .toISOString()
+     .slice(0,10)
+     .replaceAll("-","")
+ );
+}
 
-   container.appendChild(card);
+function rand(seed){
+ const x = Math.sin(seed) * 10000;
+ return x - Math.floor(x);
+}
 
- });
+function pick(arr,seed){
+ return arr[Math.floor(rand(seed) * arr.length)];
+}
 
- const wrapper = container.parentElement;
+function shuffle(arr,seed){
+ return [...arr].sort(
+   (a,b)=>
+     rand(seed + a.name.length)
+     -
+     rand(seed + b.name.length)
+ );
+}
 
- wrapper.addEventListener(
-   "scroll",
-   () => updateActiveCard(
-     data,
-     container,
-     category
+function byName(arr,name){
+ return arr.find(
+   x => x.name.toLowerCase() === String(name).toLowerCase()
+ );
+}
+
+function imgPath(item){
+ return item.image;
+}
+
+async function init(){
+
+ cases = await fetch("data/cases.json")
+   .then(r => r.json());
+
+ buildDailyCase();
+
+ bind();
+}
+
+function buildDailyCase(){
+
+ const seed = seedToday();
+
+ const entry = pick(cases, seed);
+
+ const chosen =
+   rand(seed + 2) > .5
+     ? entry.case1
+     : entry.case2;
+
+ const victimName = chosen.victim;
+
+ const killerName =
+   victimName === entry.rowCharacter
+     ? entry.columnCharacter
+     : entry.rowCharacter;
+
+ game.case = chosen;
+
+ game.victim =
+   byName(D.suspects, victimName);
+
+ game.solution.suspect =
+   byName(D.suspects, killerName);
+
+ game.solution.motive =
+   byName(
+     D.motives,
+     chosen.motive.toUpperCase()
    )
- );
+   ||
+   D.motives.find(
+     m =>
+       m.name.toLowerCase()
+       ===
+       chosen.motive.toLowerCase()
+   );
 
+ game.solution.room =
+   pick(D.rooms, seed + 4);
+
+ game.solution.weapon =
+   pick(D.weapons, seed + 5);
+
+ game.pools.suspect =
+   makePool(
+     D.suspects,
+     game.solution.suspect,
+     8,
+     seed + 10,
+     game.victim?.name
+   );
+
+ game.pools.room =
+   makePool(
+     D.rooms,
+     game.solution.room,
+     8,
+     seed + 11
+   );
+
+ game.pools.weapon =
+   makePool(
+     D.weapons,
+     game.solution.weapon,
+     8,
+     seed + 12
+   );
+
+ game.pools.motive =
+   makePool(
+     D.motives,
+     game.solution.motive,
+     8,
+     seed + 13
+   );
+
+ $("caseNumber").textContent =
+   `CASE MCI-${String(seed).slice(2)}`;
+
+ $("gameCaseNumber").textContent =
+   `MCI-${String(seed).slice(2)}`;
+
+ $("caseTurns").textContent =
+   `${game.turns} turns authorised`;
+
+ $("victimPortrait").src =
+   imgPath(game.victim);
+
+ $("victimName").textContent =
+   game.victim.name;
+
+ $("caseTitle").textContent =
+   chosen.title;
+
+ $("caseStory").textContent =
+   extractStory(chosen);
 }
 
-function renderTraits(item, category) {
+function makePool(
+ all,
+ answer,
+ size,
+ seed,
+ excludeName = null
+){
 
- let traits = item.visibleTraits || item.traits || [];
+ const pool = [answer];
 
- return traits.map(trait => {
+ shuffle(all,seed).forEach(x=>{
 
-   const glow =
-     knownTraits[category].includes(trait)
-     ? "known"
-     : "";
-
-   return `
-     <div class="trait ${glow}">
-       ${trait}
-     </div>
-   `;
-
- }).join("");
-
-}
-
-function updateActiveCard(
- data,
- container,
- category
-) {
-
- const cards =
-   [...container.querySelectorAll(".card")];
-
- let best = 0;
- let bestDistance = Infinity;
-
- cards.forEach((card, index) => {
-
-   const rect = card.getBoundingClientRect();
-
-   const center =
-     rect.left + rect.width / 2;
-
-   const distance =
-     Math.abs(center - window.innerWidth / 2);
-
-   if (distance < bestDistance) {
-     bestDistance = distance;
-     best = index;
+   if(
+     pool.length < size
+     &&
+     x.name !== answer.name
+     &&
+     x.name !== excludeName
+   ){
+     pool.push(x);
    }
 
  });
 
- cards.forEach(card =>
-   card.classList.remove("active")
- );
-
- cards[best].classList.add("active");
-
- selected[category] = best;
-
+ return shuffle(pool, seed + 99);
 }
 
-function submitTheory() {
+function extractStory(c){
 
- const suspect =
-   suspects[selected.suspect];
+ const storyLine =
+   c.characteristics.find(
+     x => x.startsWith("Story:")
+   );
 
- const room =
-   rooms[selected.room];
-
- const weapon =
-   weapons[selected.weapon];
-
- const motive =
-   motives[selected.motive];
-
- feedbackContent.innerHTML = "";
-
- processCategory(
-   "SUSPECT",
-   suspect,
-   solution.suspect,
-   suspectMatrix,
-   "CHARACTERISTIC",
-   "suspect"
- );
-
- processCategory(
-   "ROOM",
-   room,
-   solution.room,
-   roomMatrix,
-   "FEATURE",
-   "room"
- );
-
- processCategory(
-   "WEAPON",
-   weapon,
-   solution.weapon,
-   weaponMatrix,
-   "ATTRIBUTE",
-   "weapon"
- );
-
- processCategory(
-   "MOTIVE",
-   motive,
-   solution.motive,
-   motiveMatrix,
-   "MOTIVATION",
-   "motive"
- );
-
+ return storyLine
+   ? storyLine.replace("Story: ","")
+   : c.characteristics.join(" ");
 }
 
-function processCategory(
- title,
- guess,
- actual,
- matrix,
- label,
- category
-) {
+function bind(){
 
- const guessTraits =
-   guess.visibleTraits || guess.traits;
+ $("openCaseBtn").onclick =
+   ()=> show("caseScreen");
 
- const actualTraits =
-   actual.visibleTraits || actual.traits;
+ $("beginBtn").onclick = ()=>{
 
- const overlaps =
-   guessTraits.filter(
-     t => actualTraits.includes(t)
-   );
+   renderGame();
 
- const block =
-   document.createElement("div");
+   show("gameScreen");
+ };
 
- block.className = "feedback-block";
+ $("submitBtn").onclick =
+   submitTheory;
 
- let result = "";
+ $("continueBtn").onclick = ()=>{
 
- if (guess.name === actual.name) {
+   renderGame();
 
-   result = `
-     <div class="feedback-result">
-       CONFIRMED
-     </div>
-   `;
+   show("gameScreen");
+ };
 
-   setCardState(
-     category,
-     guess.name,
-     "confirmed"
-   );
+ $("howBtn").onclick = ()=>{
 
- } else if (overlaps.length === 0) {
+   game.help = 0;
 
-   result = `
-     <div class="feedback-result">
-       NO CORRELATION
-     </div>
-   `;
+   $("helpImage").src =
+     ASSETS.help[0];
 
-   setCardState(
-     category,
-     guess.name,
-     "eliminated"
-   );
+   show("howScreen");
+ };
 
- } else {
+ $("prevHelp").onclick = ()=>{
 
-   const visible =
-     getHighestValueTrait(
-       overlaps,
-       matrix
+   game.help =
+     (game.help + 2) % 3;
+
+   $("helpImage").src =
+     ASSETS.help[game.help];
+ };
+
+ $("nextHelp").onclick = ()=>{
+
+   game.help =
+     (game.help + 1) % 3;
+
+   $("helpImage").src =
+     ASSETS.help[game.help];
+ };
+
+ $("closeHelp").onclick =
+   ()=> show("caseScreen");
+}
+
+function current(cat){
+
+ return game.pools[cat][game.index[cat]];
+}
+
+function renderGame(){
+
+ $("turnsLeft").textContent =
+   game.turns;
+
+ $("gameBoard").innerHTML =
+   categories.map(cat =>
+     renderCategory(cat)
+   ).join("");
+
+ updateTheory();
+
+ document
+   .querySelectorAll(".carousel")
+   .forEach(el=>{
+
+     let startX = 0;
+
+     el.addEventListener(
+       "touchstart",
+       e=>{
+         startX =
+           e.touches[0].clientX;
+       },
+       {passive:true}
      );
 
-   knownTraits[category].push(visible);
+     el.addEventListener(
+       "touchend",
+       e=>{
 
-   refreshTraits();
+         const dx =
+           e.changedTouches[0].clientX
+           -
+           startX;
 
-   result = `
-     <div class="feedback-result">
-       PARTIAL MATCH
+         if(Math.abs(dx) > 35){
+
+           move(
+             el.dataset.cat,
+             dx < 0 ? 1 : -1
+           );
+         }
+       },
+       {passive:true}
+     );
+
+   });
+}
+
+function renderCategory(cat){
+
+ const list = game.pools[cat];
+
+ const header =
+   ASSETS.overlays[cat];
+
+ const cards =
+   [-1,0,1].map(offset=>{
+
+     const idx =
+       (
+         game.index[cat]
+         +
+         offset
+         +
+         list.length
+       ) % list.length;
+
+     const item = list[idx];
+
+     const active =
+       offset === 0;
+
+     const eliminated =
+       game.eliminated[cat]
+         .includes(item.name);
+
+     const correct =
+       game.confirmed[cat]
+       &&
+       item.name
+       ===
+       game.solution[cat].name;
+
+     const clue =
+       (
+         item.visibleTraits
+         ||
+         item.traits
+         ||
+         []
+       ).some(
+         t =>
+           game.disclosed[cat]
+             .includes(t)
+       );
+
+     return `
+       <div class="
+         card
+         ${active ? "active":"side"}
+         ${eliminated ? "eliminated":""}
+         ${correct ? "correct":""}
+         ${clue ? "clue":""}
+       ">
+
+         <img class="base" src="${imgPath(item)}">
+
+         <img
+           class="state wrong"
+           src="${ASSETS.overlays.wrong}"
+
+
+         <img
+           class="state correctframe"
+           src="${ASSETS.overlays.correct}"
+
+
+         <img
+           class="state verified"
+           src="${ASSETS.overlays.verified}"
+
+
+         <div class="cardName">
+           ${item.name}
+         </div>
+
+       </div>
+     `;
+   }).join("");
+
+ return `
+   <section class="categoryBlock">
+
+     <div
+       class="categoryHeader"
+       style="
+         background-image:url('${header}')
+       "
+</div>
+
+     <div
+       class="carousel"
+       data-cat="${cat}"
+
+       ${cards}
      </div>
 
-     <div class="feedback-detail">
-       DISCLOSED ${label}:
-       <strong>${visible.toUpperCase()}</strong>
+     <div class="disclosed">
+
+       ${
+         game.disclosed[cat].length
+         ?
+         "DISCLOSED: "
+         +
+         game.disclosed[cat].join(", ")
+         :
+         ""
+       }
+
      </div>
 
-     <div class="feedback-hidden">
-       +${overlaps.length - 1}
-       hidden correlations
-     </div>
-   `;
+   </section>
+ `;
+}
 
+function move(cat,dir){
+
+ const len =
+   game.pools[cat].length;
+
+ game.index[cat] =
+   (
+     game.index[cat]
+     +
+     dir
+     +
+     len
+   ) % len;
+
+ renderGame();
+}
+
+function updateTheory(){
+
+ $("theorySummary").innerHTML = `
+   <b>YOUR SUSPICION</b><br>
+
+   Suspect:
+   ${current("suspect").name}
+   ·
+
+   Weapon:
+   ${current("weapon").name}
+   ·
+
+   Room:
+   ${current("room").name}
+   ·
+
+   Motive:
+   ${current("motive").name}
+ `;
+}
+
+function traits(item){
+
+ return [
+
+   ...(item.visibleTraits || []),
+
+   ...(item.hiddenTraits || []),
+
+   ...(item.traits || [])
+
+ ];
+}
+
+function submitTheory(){
+
+ show("loadingScreen");
+
+ setTimeout(
+   ()=> analyseTheory(),
+   800
+ );
+}
+
+function analyseTheory(){
+
+ const results = {};
+
+ categories.forEach(cat=>{
+
+   const guess =
+     current(cat);
+
+   const actual =
+     game.solution[cat];
+
+   const correct =
+     guess.name === actual.name;
+
+   const overlaps =
+     traits(guess).filter(
+       t =>
+         traits(actual).includes(t)
+     );
+
+   results[cat] = {
+     correct,
+     overlaps
+   };
+
+   if(correct){
+
+     game.confirmed[cat] = true;
+
+   } else {
+
+     if(
+       !game.eliminated[cat]
+         .includes(guess.name)
+     ){
+       game.eliminated[cat]
+         .push(guess.name);
+     }
+
+     const undisclosed =
+       overlaps.find(
+         t =>
+           !game.disclosed[cat]
+             .includes(t)
+       );
+
+     if(undisclosed){
+
+       game.disclosed[cat]
+         .push(undisclosed);
+     }
+   }
+
+ });
+
+ if(
+   categories.every(
+     cat => results[cat].correct
+   )
+ ){
+   return closeCase(true);
  }
 
- block.innerHTML = `
-   <div class="feedback-category">
-     ${title}
-   </div>
+ game.turns--;
 
-   ${result}
+ if(game.turns <= 0){
+   return closeCase(false);
+ }
+
+ renderReport(results);
+}
+
+function labelFor(cat){
+
+ return {
+
+   suspect:"CHARACTERISTIC",
+
+   room:"FEATURE",
+
+   weapon:"ATTRIBUTE",
+
+   motive:"MOTIVATION"
+
+ }[cat];
+}
+
+function renderReport(results){
+
+ $("suspicionReport").innerHTML = `
+   Suspect:
+   <b>${current("suspect").name}</b><br>
+
+   Weapon:
+   <b>${current("weapon").name}</b><br>
+
+   Room:
+   <b>${current("room").name}</b><br>
+
+   Motive:
+   <b>${current("motive").name}</b>
  `;
 
- feedbackContent.appendChild(block);
+ $("feedbackReport").innerHTML =
+   categories.map(cat=>{
 
+     const r = results[cat];
+
+     const latest =
+       game.disclosed[cat]
+         .slice(-1)[0]
+       ||
+       "none";
+
+     const hidden =
+       Math.max(
+         0,
+         r.overlaps.length
+         -
+         (
+           latest === "none"
+           ? 0
+           : 1
+         )
+       );
+
+     return `
+       <div class="
+         feedbackRow
+         ${r.correct ? "good":"bad"}
+       ">
+
+         <b>${cat.toUpperCase()}</b><br>
+
+         RESULT:
+         ${
+           r.correct
+           ?
+           "CONFIRMED"
+           :
+           "NOT CONFIRMED"
+         }
+         <br>
+
+         DISCLOSED
+         ${labelFor(cat)}:
+         ${
+           r.correct
+           ?
+           "confirmed directly"
+           :
+           latest
+         }
+         <br>
+
+         HIDDEN CORRELATIONS:
+         ${
+           r.correct
+           ?
+           "complete match"
+           :
+           hidden
+         }
+
+       </div>
+     `;
+
+   }).join("");
+
+ show("reportScreen");
 }
 
-function getHighestValueTrait(
- overlaps,
- matrix
-) {
+function closeCase(success){
 
- let best = overlaps[0];
- let bestValue = 0;
+ $("closedTitle").textContent =
+   success
+     ? "CASE CLOSED"
+     : "CASE FAILED";
 
- overlaps.forEach(trait => {
+ $("finalKiller").src =
+   imgPath(game.solution.suspect);
 
-   const value =
-     matrix[trait]?.value || 0;
+ $("finalVictim").src =
+   imgPath(game.victim);
 
-   if (value > bestValue) {
+ $("finalWeapon").src =
+   imgPath(game.solution.weapon);
 
-     best = trait;
-     bestValue = value;
+ $("finalRoom").src =
+   imgPath(game.solution.room);
 
-   }
+ $("finalMotive").textContent =
+   `MOTIVE: ${game.solution.motive.name}`;
 
- });
+ $("finalStory").textContent = `
+   ${game.solution.suspect.name}
+   murdered
+   ${game.victim.name}.
 
- return best;
+   ${extractStory(game.case)}
 
+   The weapon was
+   ${game.solution.weapon.name}.
+
+   The scene was
+   ${game.solution.room.name}.
+ `;
+
+ show("closedScreen");
 }
 
-function setCardState(
- category,
- name,
- state
-) {
-
- let carousel;
-
- if (category === "suspect") {
-   carousel = suspectCarousel;
- }
-
- if (category === "room") {
-   carousel = roomCarousel;
- }
-
- if (category === "weapon") {
-   carousel = weaponCarousel;
- }
-
- if (category === "motive") {
-   carousel = motiveCarousel;
- }
-
- const cards =
-   [...carousel.querySelectorAll(".card")];
-
- cards.forEach(card => {
-
-   const title =
-     card.querySelector(".card-title")
-     .textContent;
-
-   if (title === name) {
-
-     if (state === "confirmed") {
-       card.classList.add("confirmed");
-     }
-
-     if (state === "eliminated") {
-       card.classList.add("eliminated");
-     }
-
-   }
-
- });
-
-}
-
-function refreshTraits() {
-
- rebuildTraits(
-   suspects,
-   suspectCarousel,
-   "suspect"
- );
-
- rebuildTraits(
-   rooms,
-   roomCarousel,
-   "room"
- );
-
- rebuildTraits(
-   weapons,
-   weaponCarousel,
-   "weapon"
- );
-
- rebuildTraits(
-   motives,
-   motiveCarousel,
-   "motive"
- );
-
-}
-
-function rebuildTraits(
- data,
- container,
- category
-) {
-
- const cards =
-   [...container.querySelectorAll(".card")];
-
- cards.forEach((card, index) => {
-
-   const traitsDiv =
-     card.querySelector(".traits");
-
-   traitsDiv.innerHTML =
-     renderTraits(
-       data[index],
-       category
-     );
-
- });
-
-}
-
-function renderPlayerState() {
-
- const currentRank =
-   rankRules.ranks.find(
-     r => r.id === playerState.rank
-   );
-
- rankName.textContent =
-   currentRank.name;
-
- streakValue.textContent =
-   playerState.streak;
-
- const avg =
-   calculateDetectionScore();
-
- detectionScore.textContent =
-   avg;
-
- promotionText.textContent =
-   buildPromotionText(avg);
-
-}
-
-function calculateDetectionScore() {
-
- if (
-   playerState.recentScores.length === 0
- ) {
-   return 0;
- }
-
- const total =
-   playerState.recentScores.reduce(
-     (a, b) => a + b,
-     0
-   );
-
- return Math.round(
-   total /
-   playerState.recentScores.length
- );
-
-}
-
-function buildPromotionText(avg) {
-
- if (avg >= 80) {
-   return "Exceptional investigative form.";
- }
-
- if (avg >= 65) {
-   return "Solve this case efficiently to strengthen promotion prospects.";
- }
-
- if (avg >= 50) {
-   return "Performance under review. Improve case efficiency.";
- }
-
- return "Solve this case in fewer turns to improve your standing.";
-
-}
-
+init();
