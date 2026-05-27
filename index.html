@@ -2,124 +2,212 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
  <title>CLUEDLE</title>
 
- <link rel="stylesheet" href="style.css" />
+ <link rel="stylesheet" href="style.css"/>
+
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
 <div id="app">
 
- <header class="top-bar">
+ <!-- INTRO SCREEN -->
+ <section id="introScreen" class="screen active intro">
+   <div class="screenShade"></div>
 
-   <div class="rank-block">
-     <div class="rank-label">RANK</div>
-     <div id="rankName" class="rank-name">Trainee Detective</div>
-   </div>
+   <div class="introBox">
+     <img src="assets/ui/mci1.PNG" class="brandLogo">
 
-   <div class="score-block">
-     <div class="score-label">DETECTION SCORE</div>
-     <div id="detectionScore" class="score-value">0</div>
-   </div>
+     <h1>CLUEDLE</h1>
 
-   <div class="streak-block">
-     <div class="streak-label">STREAK</div>
-     <div id="streakValue" class="streak-value">0</div>
-   </div>
+     <p>
+       One victim. One killer. Four truths.
+     </p>
 
- </header>
+     <button id="openCaseBtn">
+       OPEN CASE FILE
+     </button>
 
- <section class="promotion-panel">
-   <div class="promotion-title">PROMOTION APPRAISAL</div>
-   <div id="promotionText" class="promotion-text">
-     Solve this case in 6 turns or fewer to improve your standing.
+     <button id="howBtn" class="secondary">
+       HOW TO PLAY
+     </button>
    </div>
  </section>
 
- <!-- SUSPECT -->
- <section class="carousel-section">
+ <!-- HOW TO PLAY -->
+ <section id="howScreen" class="screen help">
 
-   <div class="section-title">
-     SUSPECT
-   </div>
+   <img id="helpImage" src="assets/ui/howtoplay.jpg">
 
-   <div class="carousel-wrapper">
-     <div class="carousel-track" id="suspectCarousel"></div>
+   <div class="helpControls">
+     <button id="prevHelp">BACK</button>
+     <button id="nextHelp">NEXT</button>
+     <button id="closeHelp">CASE FILE</button>
    </div>
 
  </section>
 
- <!-- ROOM -->
- <section class="carousel-section">
+ <!-- CASE FILE -->
+ <section id="caseScreen" class="screen casefile">
 
-   <div class="section-title">
-     ROOM
-   </div>
+   <div class="casePanel">
 
-   <div class="carousel-wrapper">
-     <div class="carousel-track" id="roomCarousel"></div>
-   </div>
+     <h2>VICTIM HAS BEEN MURDERED</h2>
 
- </section>
+     <img id="victimPortrait" class="victimPortrait">
 
- <!-- WEAPON -->
- <section class="carousel-section">
+     <h3 id="victimName"></h3>
 
-   <div class="section-title">
-     WEAPON
-   </div>
+     <h4 id="caseTitle"></h4>
 
-   <div class="carousel-wrapper">
-     <div class="carousel-track" id="weaponCarousel"></div>
-   </div>
+     <p id="caseStory"></p>
 
- </section>
+     <div class="caseMeta">
+       <span id="caseNumber"></span>
+       <span id="caseTurns"></span>
+     </div>
 
- <!-- MOTIVE -->
- <section class="carousel-section">
+     <button id="beginBtn">
+       BEGIN INVESTIGATION
+     </button>
 
-   <div class="section-title">
-     MOTIVE
-   </div>
-
-   <div class="carousel-wrapper">
-     <div class="carousel-track" id="motiveCarousel"></div>
    </div>
 
  </section>
 
- <div class="submit-container">
-   <button id="submitTheoryBtn">
-     SUBMIT THEORY
-   </button>
- </div>
+ <!-- GAME SCREEN -->
+ <section id="gameScreen" class="screen game">
 
- <!-- FEEDBACK -->
- <section id="feedbackPanel">
+   <header class="gameTop">
 
-   <div class="feedback-title">
-     CASE ANALYSIS REPORT
+     <div>
+       <span>CASE</span>
+       <b id="gameCaseNumber"></b>
+     </div>
+
+     <div>
+       <span>TURNS LEFT</span>
+       <b id="turnsLeft"></b>
+     </div>
+
+     <div>
+       <span>RANK</span>
+       <b id="rankName">TRAINEE</b>
+     </div>
+
+   </header>
+
+   <div id="gameBoard"></div>
+
+   <div class="theoryBar">
+
+     <div id="theorySummary"></div>
+
+     <button id="submitBtn">
+       SUBMIT ACCUSATION
+     </button>
+
    </div>
 
-   <div id="feedbackContent"></div>
+ </section>
+
+ <!-- LOADING -->
+ <section id="loadingScreen" class="screen loading">
+
+   <div class="processing">
+
+     <h2>CASE FILE PROCESSING</h2>
+
+     <p>Analysing your suspicion...</p>
+
+     <div class="scanBar">
+       <span></span>
+     </div>
+
+   </div>
+
+ </section>
+
+ <!-- REPORT -->
+ <section id="reportScreen" class="screen report">
+
+   <div class="reportPanel">
+
+     <h2>CASE ANALYSIS REPORT</h2>
+
+     <h3>YOUR SUSPICION</h3>
+
+     <div id="suspicionReport"></div>
+
+     <h3>FEEDBACK</h3>
+
+     <div id="feedbackReport"></div>
+
+     <button id="continueBtn">
+       CONTINUE INVESTIGATION
+     </button>
+
+   </div>
+
+ </section>
+
+ <!-- CASE CLOSED -->
+ <section id="closedScreen" class="screen caseclosed">
+
+   <div class="closedPanel">
+
+     <h1 id="closedTitle">CASE CLOSED</h1>
+
+     <div class="closedGrid">
+
+       <div>
+         <h3>KILLER</h3>
+         <img id="finalKiller">
+       </div>
+
+       <div>
+         <h3>VICTIM</h3>
+         <img id="finalVictim">
+       </div>
+
+       <div>
+         <h3>WEAPON</h3>
+         <img id="finalWeapon">
+       </div>
+
+       <div>
+         <h3>ROOM</h3>
+         <img id="finalRoom">
+       </div>
+
+     </div>
+
+     <h2 id="finalMotive"></h2>
+
+     <p id="finalStory"></p>
+
+     <button onclick="location.reload()">
+       NEW CASE
+     </button>
+
+   </div>
 
  </section>
 
 </div>
 
-<!-- DATA FILES -->
 <script src="data/suspects.js"></script>
 <script src="data/rooms.js"></script>
 <script src="data/weapons.js"></script>
 <script src="data/motives.js"></script>
 <script src="data/ranks.js"></script>
 
-<!-- MAIN ENGINE -->
 <script src="script.js"></script>
 
 </body>
 </html>
-
 
